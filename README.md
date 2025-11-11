@@ -4,7 +4,6 @@
 本專案為一個多代理人（Multi-Agent）智慧客服系統，模擬航空公司客戶服務流程。系統可根據使用者需求自動分派至不同專業代理人，處理如航班修改、航班取消、航班更改及行李遺失等情境，並支援自動轉接與工具呼叫，提升服務效率與體驗。
 
 ## 系統核心重點
-## 系統核心重點
  - **多代理人協作**：每個代理人（Agent）專責不同任務，並可根據情境自動轉接。
  - **分派機制**：透過分派代理人（Triage Agent）判斷使用者意圖，將請求導向正確代理人。
  - **工具呼叫**：代理人可呼叫特定工具（如查詢、升級、結案等）自動處理任務。
@@ -13,7 +12,7 @@
 
 ## 各 Agent 說明與工具
 
-### 1. Triage Agent（分診代理人）
+### 1. Triage Agent（分派代理人）
 - **功能**：判斷使用者是**航班修改**還是**行李遺失**。
 - **轉移**：轉移請求至 `Flight Modification Agent` 或 `Lost Baggage Agent`。
 
@@ -56,14 +55,14 @@
 
 ```mermaid
 flowchart TD
-    User(使用者 User)
-    TriageAgent(分派代理人 Triage Agent)
-    FlightModification(航班修改代理人 Flight Modification Agent)
-    FlightCancel(航班取消代理人 Flight Cancel Agent)
-    FlightChange(航班更改代理人 Flight Change Agent)
-    LostBaggage(行李遺失代理人 Lost Baggage Agent)
-    Tools(工具函式庫)
+    User(使用者<br><br>User)
+    TriageAgent(分派代理人<br><br>Triage Agent)
+    FlightModification(航班修改代理人<br><br>Flight Modification Agent)
+    FlightCancel(航班取消代理人<br><br>Flight Cancel Agent)
+    FlightChange(航班更改代理人<br><br>Flight Change Agent)
+    LostBaggage(行李遺失代理人<br><br>Lost Baggage Agent)
 
+    %% 主流程
     User -->|訊息| TriageAgent
     TriageAgent -->|轉接| FlightModification
     TriageAgent -->|轉接| LostBaggage
@@ -72,9 +71,24 @@ flowchart TD
     FlightCancel -->|轉接| TriageAgent
     FlightChange -->|轉接| TriageAgent
     LostBaggage -->|轉接| TriageAgent
-    FlightCancel -->|initiate_refund, initiate_flight_credits, escalate_to_agent, case_resolved| Tools
-    FlightChange -->|valid_to_change_flight, change_flight, escalate_to_agent, case_resolved| Tools
-    LostBaggage -->|initiate_baggage_search, escalate_to_agent, case_resolved| Tools
+
+    subgraph cancel_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style cancel_tools fill:#333,stroke:none
+        cancel_ops[initiate_refund,<br>initiate_flight_credits,<br>escalate_to_agent,<br>case_resolved]
+    end
+    subgraph change_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style change_tools fill:#333,stroke:none
+        change_ops[valid_to_change_flight,<br>change_flight,<br>escalate_to_agent,<br>case_resolved]
+    end
+    subgraph baggage_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style baggage_tools fill:#333,stroke:none
+        baggage_ops[initiate_baggage_search,<br>escalate_to_agent,<br>case_resolved]
+    end
+
+    FlightCancel --> cancel_ops
+    FlightChange --> change_ops
+    LostBaggage --> baggage_ops
+
 ```
 
 ## 如何設定並啟動
