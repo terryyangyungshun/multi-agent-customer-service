@@ -118,5 +118,5 @@ python main.py
 
 ---
 
-## 代理人設定範例
+## 代理人執行範例
 ![alt text](image.png)
