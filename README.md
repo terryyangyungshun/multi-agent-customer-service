@@ -13,7 +13,7 @@
 
 ## 各 Agent 說明與工具
 
-### 1. Triage Agent（分診代理人）
+### 1. Triage Agent（分派代理人）
 - **功能**：判斷使用者是**航班修改**還是**行李遺失**。
 - **轉移**：轉移請求至 `Flight Modification Agent` 或 `Lost Baggage Agent`。
 
