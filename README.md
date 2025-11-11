@@ -55,14 +55,14 @@
 
 ```mermaid
 flowchart TD
-    User(使用者 User)
-    TriageAgent(分派代理人 Triage Agent)
-    FlightModification(航班修改代理人 Flight Modification Agent)
-    FlightCancel(航班取消代理人 Flight Cancel Agent)
-    FlightChange(航班更改代理人 Flight Change Agent)
-    LostBaggage(行李遺失代理人 Lost Baggage Agent)
-    Tools(工具函式庫)
+    User(使用者<br><br>User)
+    TriageAgent(分派代理人<br><br>Triage Agent)
+    FlightModification(航班修改代理人<br><br>Flight Modification Agent)
+    FlightCancel(航班取消代理人<br><br>Flight Cancel Agent)
+    FlightChange(航班更改代理人<br><br>Flight Change Agent)
+    LostBaggage(行李遺失代理人<br><br>Lost Baggage Agent)
 
+    %% 主流程
     User -->|訊息| TriageAgent
     TriageAgent -->|轉接| FlightModification
     TriageAgent -->|轉接| LostBaggage
@@ -71,9 +71,24 @@ flowchart TD
     FlightCancel -->|轉接| TriageAgent
     FlightChange -->|轉接| TriageAgent
     LostBaggage -->|轉接| TriageAgent
-    FlightCancel -->|initiate_refund, initiate_flight_credits, escalate_to_agent, case_resolved| Tools
-    FlightChange -->|valid_to_change_flight, change_flight, escalate_to_agent, case_resolved| Tools
-    LostBaggage -->|initiate_baggage_search, escalate_to_agent, case_resolved| Tools
+
+    subgraph cancel_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style cancel_tools fill:#333,stroke:none
+        cancel_ops[initiate_refund,<br>initiate_flight_credits,<br>escalate_to_agent,<br>case_resolved]
+    end
+    subgraph change_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style change_tools fill:#333,stroke:none
+        change_ops[valid_to_change_flight,<br>change_flight,<br>escalate_to_agent,<br>case_resolved]
+    end
+    subgraph baggage_tools [Tool Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
+        style baggage_tools fill:#333,stroke:none
+        baggage_ops[initiate_baggage_search,<br>escalate_to_agent,<br>case_resolved]
+    end
+
+    FlightCancel --> cancel_ops
+    FlightChange --> change_ops
+    LostBaggage --> baggage_ops
+
 ```
 
 ## 如何設定並啟動
